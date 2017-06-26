@@ -40,9 +40,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CompareResult.cs" />
+    <Compile Include="Models\PropertiesSettings.cs" />
+    <Compile Include="Parameters\PropertiesParameters.cs" />
+    <Compile Include="Results\CompareResult.cs" />
+    <Compile Include="Parameters\PropertiesSettingsFlags.cs" />
     <Compile Include="ObjectComparer.cs" />
-    <Compile Include="ObjectComparatorSettings.cs" />
+    <Compile Include="Parameters\ObjectComparatorParameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

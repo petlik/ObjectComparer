@@ -1,9 +1,13 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ObjectComparer.Parameters;
+using ObjectComparer.Results;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
-namespace ObjectComparer.Tests
+namespace ObjectComparer
 {
 	class ExampleSimpleClass
 	{
@@ -21,7 +25,7 @@ namespace ObjectComparer.Tests
 			return new ObjectComparer<ExampleSimpleClass>();
 		}
 
-		private ObjectComparer<ExampleSimpleClass> GetObjectComparator(ObjectComparatorSettings settings)
+		private ObjectComparer<ExampleSimpleClass> GetObjectComparator(ObjectComparatorParameters settings)
 		{
 			return new ObjectComparer<ExampleSimpleClass>(settings);
 		}
@@ -109,7 +113,7 @@ namespace ObjectComparer.Tests
 		public void Compare_IgnoreParameter()
 		{
 			// Arrange
-			var settings = new ObjectComparatorSettings()
+			var settings = new ObjectComparatorParameters()
 			{
 				Ignore = new List<string> { "String" }
 			};
@@ -128,20 +132,50 @@ namespace ObjectComparer.Tests
 		}
 
 		[TestMethod()]
-		public void GetProperties_SampleClass()
+		public void Compare_CaseInsevsitive()
+		{
+			// Arrange
+			var settings = new ObjectComparatorParameters()
+			{
+				PropertiesParameters = new List<PropertiesParameters>() {
+					new PropertiesParameters() {
+						Name = "String",
+						Flags = new List<PropertiesParametersFlags>() { PropertiesParametersFlags.CaseInsensitive }
+					}
+				}
+			};
+
+			var sut = this.GetObjectComparator(settings);
+			var objectA = this.GetExampleClass();
+			var objectB = this.GetExampleClass();
+			objectB.String = objectB.String.ToUpper();
+
+			// Act
+			var result = sut.Compare(objectA, objectB);
+
+			// Assert
+			Assert.IsTrue(result.AreEqual);
+			Assert.AreEqual(0, result.Differences.Count);
+		}
+
+		[TestMethod()]
+		public void GetPropertiesSettings_SampleClass()
 		{
 			// Arrange
 			var sut = this.GetObjectComparator();
+			var listOfProperties = new List<string>() { "Bool", "Integer", "String" };
 
 			// Act
-			MethodInfo dynMethod = sut.GetType().GetMethod("GetProperties", BindingFlags.NonPublic | BindingFlags.Instance);
-			var list = (List<string>)dynMethod.Invoke(sut, null);
-
+			MethodInfo dynMethod = sut.GetType().GetMethod("GetPropertiesSettings", BindingFlags.NonPublic | BindingFlags.Instance);
+			var list = (IList)dynMethod.Invoke(sut, null);
+			
 			// Assert
-			Assert.AreEqual(3, list.Count);
-			Assert.IsTrue(list.Contains("Bool"));
-			Assert.IsTrue(list.Contains("Integer"));
-			Assert.IsTrue(list.Contains("String"));
+			Assert.AreEqual(listOfProperties.Count, list.Count);
+			foreach(var item in list)
+			{
+				var name = item.GetType().GetProperty("Name").GetValue(item, null);
+				Assert.IsTrue(listOfProperties.Contains(name));
+			}
 		}
 
 		[TestMethod()]
@@ -161,5 +195,6 @@ namespace ObjectComparer.Tests
 			Assert.AreEqual("System.Int32", integerType.FullName);
 			Assert.AreEqual("System.String", stringType.FullName);
 		}
+		
 	}
 }
