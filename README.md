@@ -30,9 +30,9 @@ You are able to customise behaviour of the comparator by using constructor with 
       Ignore = new List<string> { "StringValue" },
       PropertiesParameters = new List<PropertiesParameters>() {
         new PropertiesParameters() {
-				  Name = "AnotherStringValue",
-					Flags = new List<PropertiesParametersFlags>() { PropertiesParametersFlags.CaseInsensitive }
-				}
+          Name = "AnotherStringValue",
+          Flags = new List<PropertiesParametersFlags>() { PropertiesParametersFlags.CaseInsensitive }
+        }
       }
     });
     
