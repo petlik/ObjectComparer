@@ -1,20 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ObjectComparer.Results;
+using ObjectComparer.Parameters;
 
 namespace ObjectComparer
 {
 	public class ObjectComparer<T>
 	{
-		ObjectComparatorSettings Settings;
-		IEnumerable<string> AttributesToCheck;
+		ObjectComparatorParameters Settings;
+		IEnumerable<PropertiesSettings> AttributesToCheck;
 
-		public ObjectComparer(): this(new ObjectComparatorSettings()) {}
+		public ObjectComparer(): this(new ObjectComparatorParameters()) {}
 
-		public ObjectComparer(ObjectComparatorSettings settings)
+		public ObjectComparer(ObjectComparatorParameters settings)
 		{
 			this.Settings = settings;
-			this.AttributesToCheck = this.GetProperties().Where(x => !this.Settings.Ignore.Contains(x));
+			
+			this.AttributesToCheck = this.GetPropertiesSettings();
 		}
 
 		public CompareResult Compare(T A, T B)
@@ -27,19 +30,26 @@ namespace ObjectComparer
 
 			foreach(var property in this.AttributesToCheck)
 			{
-				var valueA = this.GetPropertyValue(property, A);
-				var valueB = this.GetPropertyValue(property, B);
+				var valueA = this.GetPropertyValue(property.Name, A);
+				var valueB = this.GetPropertyValue(property.Name, B);
 
-				var equal = Object.Equals(valueA, valueB);
+				var equal = CompareProperties(property, valueA, valueB);
 
 				if (!equal)
 				{
 					result.AreEqual = false;
-					result.Differences.Add(property);
+					result.Differences.Add(property.Name);
 				}
 			}
 			
 			return result;
+		}
+
+		private bool CompareProperties(PropertiesSettings property, object valueA, object valueB)
+		{
+			if (property.Type.FullName == "System.String" && property.Flags.Contains(PropertiesParametersFlags.CaseInsensitive))
+				return String.Equals(((string)valueA).ToLower(), ((string)valueB).ToLower());
+			return Object.Equals(valueA, valueB);
 		}
 
 		private System.Reflection.PropertyInfo[] GetPropertiesOfT()
@@ -47,13 +57,23 @@ namespace ObjectComparer
 			return typeof(T).GetProperties();
 		}
 
-		private List<string> GetProperties()
+		private List<PropertiesSettings> GetPropertiesSettings()
 		{
-			var list = new List<string>();
+			var list = new List<PropertiesSettings>();
 
 			foreach(var property in this.GetPropertiesOfT())
 			{
-				list.Add(property.Name);
+				if (this.Settings.Ignore.Contains(property.Name))
+					continue;
+
+				var propertySettings = this.Settings.PropertiesParameters.FirstOrDefault(x => x.Name.Equals(property.Name));
+
+				list.Add(new PropertiesSettings()
+				{
+					Name = property.Name,
+					Type = property.PropertyType,
+					Flags = propertySettings != null ? propertySettings.Flags : new List<PropertiesParametersFlags>()
+				});
 			}
 
 			return list;

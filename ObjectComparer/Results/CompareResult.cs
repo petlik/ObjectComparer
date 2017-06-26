@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ObjectComparer
+namespace ObjectComparer.Results
 {
 	public class CompareResult
 	{
