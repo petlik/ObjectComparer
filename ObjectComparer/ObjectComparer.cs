@@ -60,6 +60,7 @@ namespace ObjectComparer
 		private List<PropertiesSettings> GetPropertiesSettings()
 		{
 			var list = new List<PropertiesSettings>();
+			var globalFlags = this.Settings.Parameters;
 
 			foreach(var property in this.GetPropertiesOfT())
 			{
@@ -72,7 +73,7 @@ namespace ObjectComparer
 				{
 					Name = property.Name,
 					Type = property.PropertyType,
-					Flags = propertySettings != null ? propertySettings.Flags : new List<PropertiesParametersFlags>()
+					Flags = propertySettings != null ? propertySettings.Flags.Union(globalFlags).Distinct().ToList() : globalFlags
 				});
 			}
 
