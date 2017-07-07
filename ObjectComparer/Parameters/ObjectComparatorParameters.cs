@@ -9,11 +9,13 @@ namespace ObjectComparer.Parameters
 	public class ObjectComparatorParameters
 	{
 		public List<string> Ignore { get; set; }
+		public List<PropertiesParametersFlags> Parameters;
 		public List<PropertiesParameters> PropertiesParameters { get; set; }
 
 		public ObjectComparatorParameters()
 		{
 			this.Ignore = new List<string>();
+			this.Parameters = new List<PropertiesParametersFlags>();
 			this.PropertiesParameters = new List<PropertiesParameters>();
 		}
 	}

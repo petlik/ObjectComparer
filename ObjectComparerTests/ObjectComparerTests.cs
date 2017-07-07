@@ -137,6 +137,28 @@ namespace ObjectComparer
 			// Arrange
 			var settings = new ObjectComparatorParameters()
 			{
+				Parameters = new List<PropertiesParametersFlags>() { PropertiesParametersFlags.CaseInsensitive }
+			};
+
+			var sut = this.GetObjectComparator(settings);
+			var objectA = this.GetExampleClass();
+			var objectB = this.GetExampleClass();
+			objectB.String = objectB.String.ToUpper();
+
+			// Act
+			var result = sut.Compare(objectA, objectB);
+
+			// Assert
+			Assert.IsTrue(result.AreEqual);
+			Assert.AreEqual(0, result.Differences.Count);
+		}
+
+		[TestMethod()]
+		public void Compare_CaseInsevsitiveForParameter()
+		{
+			// Arrange
+			var settings = new ObjectComparatorParameters()
+			{
 				PropertiesParameters = new List<PropertiesParameters>() {
 					new PropertiesParameters() {
 						Name = "String",
