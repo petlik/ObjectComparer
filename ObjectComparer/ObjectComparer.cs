@@ -49,7 +49,9 @@ namespace ObjectComparer
 		{
 			if (property.Type.FullName == "System.String" && property.Flags.Contains(PropertiesParametersFlags.CaseInsensitive))
 				return String.Equals(((string)valueA).ToLower(), ((string)valueB).ToLower());
-			return Object.Equals(valueA, valueB);
+            if (property.Type.FullName == "System.Char" && property.Flags.Contains(PropertiesParametersFlags.CaseInsensitive))
+                return String.Equals(char.ToLower(((char)valueA)), char.ToLower(((char)valueB)));
+            return Object.Equals(valueA, valueB);
 		}
 
 		private System.Reflection.PropertyInfo[] GetPropertiesOfT()
