@@ -13,7 +13,8 @@ namespace ObjectComparer
 	{
 		public bool Bool { get; set; }
 		public int Integer { get; set; }
-		public string String { get; set; }
+        public char Character { get; set; }
+        public string String { get; set; }
 	}
 
 	[TestClass()]
@@ -36,6 +37,7 @@ namespace ObjectComparer
 			{
 				Bool = true,
 				Integer = 13,
+                Character = 'h',
 				String = "Hello"
 			};
 		}
@@ -154,14 +156,14 @@ namespace ObjectComparer
 		}
 
 		[TestMethod()]
-		public void Compare_CaseInsevsitiveForParameter()
+		public void Compare_CaseInsevsitiveForParameterForCharacter()
 		{
 			// Arrange
 			var settings = new ObjectComparatorParameters()
 			{
 				PropertiesParameters = new List<PropertiesParameters>() {
 					new PropertiesParameters() {
-						Name = "String",
+						Name = "Character",
 						Flags = new List<PropertiesParametersFlags>() { PropertiesParametersFlags.CaseInsensitive }
 					}
 				}
@@ -170,7 +172,7 @@ namespace ObjectComparer
 			var sut = this.GetObjectComparator(settings);
 			var objectA = this.GetExampleClass();
 			var objectB = this.GetExampleClass();
-			objectB.String = objectB.String.ToUpper();
+			objectB.Character = char.ToUpper(objectB.Character);
 
 			// Act
 			var result = sut.Compare(objectA, objectB);
@@ -180,12 +182,40 @@ namespace ObjectComparer
 			Assert.AreEqual(0, result.Differences.Count);
 		}
 
-		[TestMethod()]
+        [TestMethod()]
+        public void Compare_CaseInsevsitiveForParameterForString()
+        {
+            // Arrange
+            var settings = new ObjectComparatorParameters()
+            {
+                PropertiesParameters = new List<PropertiesParameters>() {
+                    new PropertiesParameters() {
+                        Name = "String",
+                        Flags = new List<PropertiesParametersFlags>() { PropertiesParametersFlags.CaseInsensitive }
+                    }
+                }
+            };
+
+            var sut = this.GetObjectComparator(settings);
+            var objectA = this.GetExampleClass();
+            var objectB = this.GetExampleClass();
+            objectB.String = objectB.String.ToUpper();
+
+            // Act
+            var result = sut.Compare(objectA, objectB);
+
+            // Assert
+            Assert.IsTrue(result.AreEqual);
+            Assert.AreEqual(0, result.Differences.Count);
+        }
+
+
+        [TestMethod()]
 		public void GetPropertiesSettings_SampleClass()
 		{
 			// Arrange
 			var sut = this.GetObjectComparator();
-			var listOfProperties = new List<string>() { "Bool", "Integer", "String" };
+			var listOfProperties = new List<string>() { "Bool", "Integer", "Character", "String" };
 
 			// Act
 			MethodInfo dynMethod = sut.GetType().GetMethod("GetPropertiesSettings", BindingFlags.NonPublic | BindingFlags.Instance);
