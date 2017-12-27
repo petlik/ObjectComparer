@@ -37,7 +37,7 @@ It is posible to customise behaviour of the comparator by using constructor with
                         }
                 }
             });
-    
+
 The available options are:
 
 * **Ignore** - specify properties that should be skipped during comparison
