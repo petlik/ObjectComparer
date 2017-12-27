@@ -24,21 +24,22 @@ ObjectComparer (as name sugest) is a tool that check if objects are equal and cr
       
 ## Options
 
-You are able to customise behaviour of the comparator by using constructor with option parameter
+It is posible to customise behaviour of the comparator by using constructor with optional parameter
 
-    var objectComparator = ObjectComparator<SampleClass>(new ObjectComparatorSettings() {
-      Ignore = new List<string> { "StringValue" },
-	  Parameters = new List<PropertiesParametersFlags>(),
-      PropertiesParameters = new List<PropertiesParameters>() {
-        new PropertiesParameters() {
-				  Name = "AnotherStringValue",
-					Flags = new List<PropertiesParametersFlags>() { PropertiesParametersFlags.CaseInsensitive }
-				}
-      }
-    });
+    var objectComparator = new ObjectComparer<ExampleSimpleClass>(new ComparerParameters()
+            {
+                Ignore = new List<string> { "StringValue" },
+                Flags = new List<ComparerFlags>(),
+                Properties = new List<ComparerProperties>() {
+                    new ComparerProperties() {
+                          Name = "AnotherStringValue",
+                          Flags = new List<ComparerFlags>() { ComparerFlags.CaseInsensitive }
+                        }
+                }
+            });
     
 The available options are:
 
 * **Ignore** - specify properties that should be skipped during comparison
-* **Parameters** - specify options. For now the only available options is **CaseInsensitive**
-* **PropertiesParameters** - specify options for property. For now the only available options is **CaseInsensitive**
+* **Flags** - specify options. For now the only available options is **CaseInsensitive**
+* **Properties** - specify options for property. For now the only available options is **CaseInsensitive**
