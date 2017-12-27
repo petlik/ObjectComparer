@@ -41,11 +41,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\PropertiesSettings.cs" />
-    <Compile Include="Parameters\PropertiesParameters.cs" />
-    <Compile Include="Results\CompareResult.cs" />
-    <Compile Include="Parameters\PropertiesSettingsFlags.cs" />
+    <Compile Include="Models\PropertiesParameters.cs" />
+    <Compile Include="Models\Result.cs" />
+    <Compile Include="Models\ComparerFlags.cs" />
     <Compile Include="ObjectComparer.cs" />
-    <Compile Include="Parameters\ObjectComparatorParameters.cs" />
+    <Compile Include="Models\ComparerParameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
