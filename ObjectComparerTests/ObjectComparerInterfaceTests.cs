@@ -1,7 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ObjectComparer;
 using System.Diagnostics.CodeAnalysis;
 
-namespace ObjectComparer
+namespace ObjectComparerTests
 {
     interface IExampleInterface
     {

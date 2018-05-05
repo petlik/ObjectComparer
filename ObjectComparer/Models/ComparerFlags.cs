@@ -2,6 +2,10 @@
 {
     public enum ComparerFlags
     {
-        CaseInsensitive = 1
+        // string parameters
+        CaseInsensitive,
+
+        // datetime parameters
+        IgnoreTime
     }
 }

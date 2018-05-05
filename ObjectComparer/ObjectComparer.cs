@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -43,13 +44,20 @@ namespace ObjectComparer
             return result;
         }
 
+        private IComparer GetComparer(PropertiesSettings property)
+        {
+            if (property.Type == typeof(string))
+                return new StringComparer(property.Flags);
+            if (property.Type == typeof(char))
+                return new CharacterComparer(property.Flags);
+            if (property.Type == typeof(DateTime))
+                return new DateTimeComparer(property.Flags);
+            return new GenericComparer();
+        }
+
         private bool CompareProperties(PropertiesSettings property, object valueA, object valueB)
         {
-            if (property.Type.FullName == "System.String" && property.Flags.Contains(ComparerFlags.CaseInsensitive))
-                return String.Equals(((string)valueA).ToLower(), ((string)valueB).ToLower());
-            if (property.Type.FullName == "System.Char" && property.Flags.Contains(ComparerFlags.CaseInsensitive))
-                return String.Equals(char.ToLower(((char)valueA)), char.ToLower(((char)valueB)));
-            return Object.Equals(valueA, valueB);
+            return this.GetComparer(property).Compare(valueA, valueB);
         }
 
         private System.Reflection.PropertyInfo[] GetPropertiesOfT()

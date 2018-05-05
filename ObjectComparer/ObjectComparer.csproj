@@ -40,6 +40,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Comparers\BaseComparer.cs" />
+    <Compile Include="Comparers\CharacterComparer.cs" />
+    <Compile Include="Comparers\DateTimeComparer.cs" />
+    <Compile Include="Comparers\GenericComparer.cs" />
+    <Compile Include="Comparers\IComparer.cs" />
+    <Compile Include="Comparers\StringComparer.cs" />
     <Compile Include="Models\PropertiesSettings.cs" />
     <Compile Include="Models\PropertiesParameters.cs" />
     <Compile Include="Models\Result.cs" />
