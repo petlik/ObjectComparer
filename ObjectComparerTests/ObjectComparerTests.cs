@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ObjectComparer;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 
-namespace ObjectComparer
+namespace ObjectComparerTests
 {
     [ExcludeFromCodeCoverage]
     class ExampleSimpleClass
@@ -15,6 +16,7 @@ namespace ObjectComparer
         public int Integer { get; set; }
         public char Character { get; set; }
         public string String { get; set; }
+        public DateTime Date { get; set; }
     }
 
     [TestClass]
@@ -39,7 +41,8 @@ namespace ObjectComparer
                 Bool = true,
                 Integer = 13,
                 Character = 'h',
-                String = "Hello"
+                String = "Hello",
+                Date = new DateTime(1969, 7, 20, 20, 18, 00)
             };
         }
 
@@ -210,13 +213,12 @@ namespace ObjectComparer
             Assert.AreEqual(0, result.Differences.Count);
         }
 
-
         [TestMethod]
         public void GetPropertiesSettings_SampleClass()
         {
             // Arrange
             var sut = this.GetObjectComparator();
-            var listOfProperties = new List<string>() { "Bool", "Integer", "Character", "String" };
+            var listOfProperties = new List<string>() { "Bool", "Integer", "Character", "String", "Date" };
 
             // Act
             MethodInfo dynMethod = sut.GetType().GetMethod("GetPropertiesSettings", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -242,11 +244,13 @@ namespace ObjectComparer
             var boolType = (Type)dynMethod.Invoke(sut, new object[] { "Bool" });
             var integerType = (Type)dynMethod.Invoke(sut, new object[] { "Integer" });
             var stringType = (Type)dynMethod.Invoke(sut, new object[] { "String" });
+            var dateTimeType = (Type)dynMethod.Invoke(sut, new object[] { "Date" });
 
             // Assert
             Assert.AreEqual("System.Boolean", boolType.FullName);
             Assert.AreEqual("System.Int32", integerType.FullName);
             Assert.AreEqual("System.String", stringType.FullName);
+            Assert.AreEqual("System.DateTime", dateTimeType.FullName);
         }
 
     }
